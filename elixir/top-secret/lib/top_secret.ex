@@ -4,27 +4,28 @@ defmodule TopSecret do
     |> Code.string_to_quoted!()
   end
 
-  def decode_secret_message_part({operation, _, [definition | _]} = ast, acc)
+  def decode_secret_message_part({operation, _, definition} = ast, acc)
       when operation in [:def, :defp] do
-    {ast, List.flatten([get_secret(definition), acc])}
+    secret = definition |> parse_def() |> parse_body()
+    {ast, [secret | acc]}
   end
 
   def decode_secret_message_part(ast, acc) do
     {ast, acc}
   end
 
-  def get_secret(definition) do
-    definition |> parse_def() |> parse_body()
-  end
+  def parse_def([{:when, _, [fun_body | _]} | _]), do: fun_body
+  def parse_def([fun_body | _]), do: fun_body
 
-  def parse_def({:when, _, [fun_body | _]}), do: fun_body
-  def parse_def({fun_body, _}), do: fun_body
+  def parse_body({_name, _, nil}), do: ""
 
   def parse_body({name, _, args}) do
-    a = name |> to_string() |> String.slice(0, length(args))
-    IO.puts(a)
+    name |> to_string() |> String.slice(0, length(args))
   end
 
   def decode_secret_message(string) do
+    ast = to_ast(string)
+    {_, acc} = Macro.prewalk(ast, [], &decode_secret_message_part/2)
+    acc |> Enum.reverse() |> Enum.join()
   end
 end
