@@ -65,7 +65,7 @@ defmodule ReactTest do
     assert React.get_value(cells, "output") == 4
   end
 
-  # TODO: Pass this
+  # @tag :pending
   test "compute cells can depend on other compute cells" do
     {:ok, cells} =
       React.new([
@@ -80,7 +80,7 @@ defmodule ReactTest do
     assert React.get_value(cells, "output") == 96
   end
 
-  @tag :pending
+  # @tag :pending
   test "compute cells fire callbacks" do
     {:ok, cells} =
       React.new([
@@ -94,7 +94,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback1", 4}
   end
 
-  @tag :pending
+  # @tag :pending
   test "callback cells only fire on change" do
     {:ok, cells} =
       React.new([
@@ -110,7 +110,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback1", 222}
   end
 
-  @tag :pending
+  # @tag :pending
   test "callbacks do not report already reported values" do
     {:ok, cells} =
       React.new([
@@ -126,7 +126,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback1", 4}
   end
 
-  @tag :pending
+  # @tag :pending
   test "callbacks can fire from multiple cells" do
     {:ok, cells} =
       React.new([
@@ -143,7 +143,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback2", 9}
   end
 
-  @tag :pending
+  # @tag :pending
   test "callbacks can be added and removed" do
     {:ok, cells} =
       React.new([
@@ -166,7 +166,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback3", 42}
   end
 
-  @tag :pending
+  # @tag :pending
   test "removing a callback multiple times doesn't interfere with other callbacks" do
     # Some incorrect implementations store their callbacks in an array
     # and removing a callback repeatedly either removes an unrelated callback
@@ -188,7 +188,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback2", 3}
   end
 
-  @tag :pending
+  # @tag :pending
   test "callbacks should only be called once even if multiple dependencies change" do
     # Some incorrect implementations call a callback function too early,
     # when not all of the inputs of a compute cell have propagated new values.
@@ -207,7 +207,7 @@ defmodule ReactTest do
     assert_receive {:callback, "callback1", 10}
   end
 
-  @tag :pending
+  # @tag :pending
   test "callbacks should not be called if dependencies change but output value doesn't change" do
     # Some incorrect implementations simply mark a compute cell as dirty when a dependency changes,
     # then call callbacks on all dirty cells.
